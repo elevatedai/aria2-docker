@@ -19,13 +19,9 @@ RUN apk add --no-cache bash curl jq findutils grep
 
 RUN adduser -D -u 1000 -h /home/user user
 
-ENV HOME /home/user
+WORKDIR /app
 
-ENV PATH=$HOME/bin:$PATH
-
-WORKDIR $HOME/app
-
-RUN chown -R user:user $HOME
+RUN chown -R user:user /app
 
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
@@ -33,18 +29,16 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 COPY --chown=user:user scripts/ ./scripts/
 
-COPY --from=builder --chown=user:user /app/bin/ $HOME/bin/
+COPY --from=builder --chown=user:user /app/bin/ /usr/bin/
 
 USER user
 
-ENV ARIA2_CONF_DIR $HOME/app/scripts/aria2
+ENV ARIA2_CONF_DIR /app/scripts
 
-RUN mkdir -p $HOME/downloads
-
-ENV ARIA2_DOWNLOAD_DIR $HOME/downloads
+RUN mkdir -p /app/downloads
 
 ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 
-RUN chmod +x $HOME/app/scripts/**/*.sh  $HOME/app/scripts/*.sh
+RUN chmod +x /app/scripts/**/*.sh /app/scripts/*.sh
 
 ENTRYPOINT [ ". /scripts/start.sh" ]
