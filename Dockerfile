@@ -34,6 +34,8 @@ RUN mv /usr/bin/7zzs /usr/bin/7z
 
 USER user
 
+WORKDIR /app
+
 ENV ARIA2_CONF_DIR /app/scripts
 
 RUN mkdir -p /app/downloads
@@ -42,4 +44,4 @@ ENV ARIA2_DOWNLOAD_DIR /app/downloads
 
 ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 
-RUN chmod +x /app/scripts/**/*.sh /app/scripts/*.sh
+RUN chmod +x ./scripts/*.sh
