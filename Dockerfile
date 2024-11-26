@@ -6,12 +6,11 @@ RUN apk add --no-cache ca-certificates git tar xz bash curl make unzip tzdata &&
 
 WORKDIR /app/bin
 
-RUN curl -s https://sh-install.vercel.app/abcfy2/aria2-static-build?as=aria2c | bash
+RUN curl -s "https://sh-install.vercel.app/abcfy2/aria2-static-build?token=$GITHUB_TOKEN" | bash
 
-RUN curl -s https://sh-install.vercel.app/divyam234/rclone-mod?private=1 | bash 
+RUN curl -s "https://sh-install.vercel.app/divyam234/rclone-mod?private=1&token=$GITHUB_TOKEN" | bash 
 
-RUN curl -s -LO "https://www.7-zip.org/a/7z2301-linux-x64.tar.xz" && mkdir ./7zip && \
-    tar -xJf ./7z2301-linux-x64.tar.xz -C ./7zip && mv ./7zip/7zzs 7z && rm -rf ./7zip ./7z2301-linux-x64.tar.xz
+RUN curl -s "https://sh-install.vercel.app/divyam234/static-builds?include=7z&token=$GITHUB_TOKEN" | bash
 
 FROM alpine
 
@@ -31,6 +30,8 @@ COPY --chown=user:user scripts/ ./scripts/
 
 COPY --from=builder --chown=user:user /app/bin/ /usr/bin/
 
+RUN mv /usr/bin/7zzs /usr/bin/7z
+
 USER user
 
 ENV ARIA2_CONF_DIR /app/scripts
@@ -42,5 +43,3 @@ ENV ARIA2_DOWNLOAD_DIR /app/downloads
 ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 
 RUN chmod +x /app/scripts/**/*.sh /app/scripts/*.sh
-
-ENTRYPOINT [ "./scripts/start.sh" ]
