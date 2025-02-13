@@ -6,11 +6,11 @@ RUN apk add --no-cache ca-certificates git tar xz bash curl make unzip tzdata &&
 
 WORKDIR /app/bin
 
-RUN curl -s "https://sh-install.vercel.app/abcfy2/aria2-static-build?token=$GITHUB_TOKEN" | bash
+RUN curl -s "https://instl.vercel.app/abcfy2/aria2-static-build?move=0" | bash
 
-RUN curl -s "https://sh-install.vercel.app/divyam234/rclone-mod?private=1&token=$GITHUB_TOKEN" | bash 
+RUN curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://instl.vercel.app/divyam234/rclone-mod?move=0" | bash 
 
-RUN curl -s "https://sh-install.vercel.app/divyam234/static-builds?include=7z&token=$GITHUB_TOKEN" | bash
+RUN curl -s "https://instl.vercel.app/divyam234/static-builds?include=7z&move=0" | bash
 
 FROM alpine
 
